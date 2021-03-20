@@ -9,24 +9,25 @@ int randNum(int max) {
 }
 class product {
 	public:
-		string products[4] = {"agriculture", "fuel", "electronics", "cars"};
+		string products[4] = {"agriculture", "fuel", "electronics", "roadVehicles"};
 		string services[3] = { "shipping", "hospitality", "garbage" };
 		string supplyChain[3];
 };
 int main() {
 	int workers = 100, month = 1;
 	float totalCompanyValue = 101872.62, revenue = 6724.11, profitMargin = 0.34, wage = 9, percentOutsourced = 0, potentialWage, potentialWage2, profit;
-	string version = "prod0.0.5", name, companyName, command = "";
+	string version = "prod0.0.6", name, companyName, command = "";
 	string randomEvents[] = { "deathAssassinated", "deathCancer", "deathCarCrash", "governmentGrant", "childLaborExposed"};
+	string primarySectors[4][5] = { {"USA", "Denmark", "India", "Romania"} };
 	bool nextMonth = false;
-
-	profit = revenue / profitMargin;
+	
+	profit = revenue * profitMargin;
 
 	cout << "==========\nWelcome to Supply Chain. You are playing version: " + version + "\n\nPlease enter your name: \n> ";
 	cin >> name;
 	cout << "Thank you. Please enter your company name: \n> ";
 	cin >> companyName;
-	cout << "Welcome, " << name << ", owner of " << companyName << ", to Supply chain. You are a new business owner toying with the idea of outsourcing, which is getting the materials for and creating ypur products in a different country. This can lower costs, but it has some effects.(Press Enter)\n";
+	cout << "Welcome, " << name << ", owner of " << companyName << ", to Supply chain. You are a new US business owner toying with the idea of outsourcing, which is getting the materials for and creating your products in a different country. This can lower costs, but it has some effects.(Press Enter)\n";
 	_getch();
 	cout << "The United States outsources a ton of stuff - in 2017, 84.2% of outsourcing deals came from the US!\nYou are new to the concepts of globalization, which is the interdependence of countries on each other. While researching, you find that there are pros and cons to globalization.(Press Enter)\n";
 	_getch();
@@ -34,8 +35,10 @@ int main() {
 	_getch();
 	cout << "Cons:\n-Takes advantage of third-world countries, where children may be doing the labor.\n";
 	_getch();
+	cout << "As you can see, yes.";
+	_getch();
 	while (true) {
-		cout << "\n==========\nStart of month " << month << "\nTotal workers: " << workers << "\n\nTotal comany value: $" << totalCompanyValue << "\nTotal revenue per month: $" << revenue;
+		cout << "\n==========\nStart of month " << month << "\nTotal workers: " << workers << "\n\nTotal company value: $" << totalCompanyValue << "\nTotal revenue per month: $" << revenue;
 		cout << "\nProfit per month: $" << profit << "\nProfit margin: " << profitMargin * 100 << "%\nPercent of products outsourced: " << percentOutsourced << "%\n";
 
 		while (true) {
@@ -73,7 +76,11 @@ int main() {
 				return 0;
 			}
 		}
+		if (month == 1) {
+			cout << "Congratulations on completing month 1. ";
+		}
 		month++;
+		
 	}
 	return 0;
 };
