@@ -5,7 +5,8 @@
 #include <cstdlib>
 #include <stdlib.h>
 #include <vector>
-#include <unistd.h>
+//#include <unistd.h>
+#include <windows.h>
 using namespace std;
 int randNum(int max) {
 	int returnValue = (rand() % max) + 1;
@@ -20,9 +21,11 @@ class product {
 int main() {
 	int workers = 100, month = 1;
 	float totalCompanyValue = 101872.62, revenue = 6724.11, profitMargin = 0.34, wage = 9, percentOutsourced = 0, potentialWage, potentialWage2, profit;
-	string version = "prod0.0.7", name, companyName, command = "";
+	string version = "prod0.0.8e", name, companyName, command = "";
 	string randomEvents[] = { "deathAssassinated", "deathCancer", "deathCarCrash", "governmentGrant", "childLaborExposed"};
-	string primarySectors[4][5] = { {"USA", "Denmark", "India", "Romania"} };
+	string primarySectors[4][5] = { {"USA", "Denmark", "India", "Romania", "England"}, {"Canada", "Russia", "Kazakhstan", "USA", "India"}, {"China", "Malaysia", "Thailand", "Phillipines"}, {"Mexico", "England", "Germany", "Poland", "Spain"} };
+	string secondarySectors[4][3] = { {"China", "USA", "Indonesia"}, {"USA", "India", "Sweden"}, {"China", "USA", "Thailand"}, {"Mexico", "England", "Poland"} };
+	string terciarySectors[4][2] = { {"USA", "India"}, {"USA", "China"}, {"USA", "China"}, {"USA", "China"} };
 	bool nextMonth = false;
 
 	profit = revenue * profitMargin;
@@ -33,7 +36,7 @@ int main() {
 	cin >> companyName;
   cout << "Please wait, loading...\n";
 
-  sleep(3);
+  Sleep(3000);
 	cout << "Welcome, " << name << ", owner of " << companyName << ", to Supply chain. You are a new US business owner toying with the idea of outsourcing, which is getting the materials for and creating your products in a different country. This can lower costs, but it has some effects.(Press Enter)\n";
 	cin.ignore();
   cin.ignore();
@@ -90,7 +93,10 @@ int main() {
 			cout << "Congratulations on completing month 1. ";
 		}
 		month++;
-		
+		workers = workers + randNum((int)workers / 5);
+		totalCompanyValue = totalCompanyValue + randNum((int)totalCompanyValue / 3);
+		revenue = revenue + randNum((int)revenue / 3);
+		profit = revenue * profitMargin;
 	}
 	return 0;
 };
