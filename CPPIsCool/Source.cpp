@@ -17,19 +17,32 @@ class product {
 		string products[4] = {"agriculture", "fuel", "electronics", "roadVehicles"};
 		string services[3] = { "shipping", "hospitality", "garbage" };
 		string supplyChain[3];
+		string productName, field;
+		product(string prodName, string slupChain[3], string feld) {
+			productName = prodName;
+			supplyChain[0] = slupChain[0];
+			supplyChain[1] = slupChain[1];
+			supplyChain[2] = slupChain[2];
+			field = feld;
+		}
 };
 int main() {
 	int workers = 100, month = 1;
 	float totalCompanyValue = 101872.62, revenue = 6724.11, profitMargin = 0.34, wage = 9, percentOutsourced = 0, potentialWage, potentialWage2, profit;
-	string version = "prod0.0.8e", name, companyName, command = "";
+	string version = "prod0.0.9", name, companyName, command = "", mainField;
 	string randomEvents[] = { "deathAssassinated", "deathCancer", "deathCarCrash", "governmentGrant", "childLaborExposed"};
+	string fields[4] = { "agriculture", "fuel", "electronics", "roadVehicles" };
+	//string fieldProdNames[4][5] = {}
 	string primarySectors[4][5] = { {"USA", "Denmark", "India", "Romania", "England"}, {"Canada", "Russia", "Kazakhstan", "USA", "India"}, {"China", "Malaysia", "Thailand", "Phillipines"}, {"Mexico", "England", "Germany", "Poland", "Spain"} };
 	string secondarySectors[4][3] = { {"China", "USA", "Indonesia"}, {"USA", "India", "Sweden"}, {"China", "USA", "Thailand"}, {"Mexico", "England", "Poland"} };
 	string terciarySectors[4][2] = { {"USA", "India"}, {"USA", "China"}, {"USA", "China"}, {"USA", "China"} };
 	bool nextMonth = false;
-
+	vector<product> products;
 	profit = revenue * profitMargin;
-
+	/*for (int i = 0, i < 3, i++) {
+		product newProd = new product()
+		products.emplace();
+	}*/
 	cout << "==========\nWelcome to Supply Chain. You are playing version: " + version + "\n\nPlease enter your name: \n> ";
 	cin >> name;
 	cout << "Thank you. Please enter your company name: \n> ";
