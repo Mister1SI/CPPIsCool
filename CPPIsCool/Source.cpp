@@ -10,7 +10,14 @@
 #include <fstream>
 //#include <windows.h>
 using namespace std;
-using g = long;
+typedef int __Ifd, *_IN_, (*lmt)(void);
+  string fields[4] = { "agriculture", "fuel", "electronics", "roadVehicles" };
+	string fieldProdNames[4][5] = {{"Cereal", "Flour", "Sugar", "Eggs", "Meat"}, {"Refined gasoline", "Raw diesel", "Refined diesel", "Crude oil", "Kerosene"}, {"Smartphone", "Tablet", "Laptop", "Desktop", "Motherboard"}, {"SUV", "Car", "Truck", "Van", "Sports Car"}};
+	string primarySectors[4][5] = { {"USA", "Denmark", "India", "Romania", "England"}, {"Canada", "Russia", "Kazakhstan", "USA", "India"}, {"China", "Malaysia", "Thailand", "Phillipines"}, {"Mexico", "England", "Germany", "Poland", "Spain"} };
+	string secondarySectors[4][3] = { {"China", "USA", "Indonesia"}, {"USA", "India", "Sweden"}, {"China", "USA", "Thailand"}, {"Mexico", "England", "Poland"} };
+	string terciarySectors[4][2] = { {"USA", "India"}, {"USA", "China"}, {"USA", "China"}, {"USA", "China"} };
+  int randField = (rand() % 3) + 1;
+  
 int randNum(int max) {
 	int returnValue = (rand() % max) + 1;
 	return returnValue;
@@ -20,49 +27,59 @@ class product {
 		string products[4] = {"agriculture", "fuel", "electronics", "roadVehicles"};
 		string services[3] = { "shipping", "hospitality", "garbage" };
 		string supplyChain[3];
-		string productName, field;
+		string productName;
+    int field;
     bool outsourced;
-		product(string prodName, string slupChain[3], string feld) {
+		product(string prodName, string slupChain[3], int feld) {
 			productName = prodName;
 			supplyChain[0] = slupChain[0];
 			supplyChain[1] = slupChain[1];
 			supplyChain[2] = slupChain[2];
 			field = feld;
+      outsourced = false;
 		}
 };
+void makeProduct(int fieldNew) {
+  int rand5 = randNum(4);
+  int rand3 = randNum(2);
+  __Ifd rand2 = randNum(1);
+  string supplyChainNew[3];
+  supplyChainNew[0] = primarySectors[fieldNew][rand5];
+  supplyChainNew[1] = secondarySectors[fieldNew][rand3];
+  supplyChainNew[2] = terciarySectors[fieldNew][rand2];
+  string prodNameNew = fieldProdNames[fieldNew][rand5];
+  //product returnObject = new product(prodNameNew, supplyChainNew, fieldNew);
+  //return returnObject;
+}
 int main() {
   ofstream outStream("records.txt");
   time_t now = time(0);
   char* dt = ctime(&now);
-  //cout << "DEBUG: " << dt << endl;
+  //cout << "DEBUG: " << dt << endl << &fields[2] << endl << "Possible 0x8007002\n";
   srand((unsigned) time(0));
-	int workers = 100, month = 1, randField;
+	int workers = 100, month = 1;
 	float totalCompanyValue = 101872.62, revenue = 6724.11, profitMargin = 0.34, wage = 9, percentOutsourced = 0, potentialWage, potentialWage2, profit;
-	string version = "prod0.1.0", name, companyName, command = "", mainField;
+	string version = "prod0.1.1", name, companyName, command = "";
 	string randomEvents[] = { "deathAssassinated", "deathCancer", "deathCarCrash", "governmentGrant", "childLaborExposed"};
-	string fields[4] = { "agriculture", "fuel", "electronics", "roadVehicles" };
-	string fieldProdNames[4][5] = {{"Cereal", "Flour", "Sugar", "Eggs", "Meat"}, {"Refined gasoline", "Raw diesel", "Refined diesel", "Crude oil", "Kerosene"}, {"Smartphone", "Tablet", "Laptop", "Desktop", "Motherboard"}, {"SUV", "Car", "Truck", "Van", "Sports Car"}};
-	string primarySectors[4][5] = { {"USA", "Denmark", "India", "Romania", "England"}, {"Canada", "Russia", "Kazakhstan", "USA", "India"}, {"China", "Malaysia", "Thailand", "Phillipines"}, {"Mexico", "England", "Germany", "Poland", "Spain"} };
-	string secondarySectors[4][3] = { {"China", "USA", "Indonesia"}, {"USA", "India", "Sweden"}, {"China", "USA", "Thailand"}, {"Mexico", "England", "Poland"} };
-	string terciarySectors[4][2] = { {"USA", "India"}, {"USA", "China"}, {"USA", "China"}, {"USA", "China"} };
-  randField = (rand() % 3) + 1;
-  mainField = fields[randField];
+	
+  string mainField = fields[randField];
 	bool nextMonth = false, playedBefore;
 	vector<product> products;
 	profit = revenue * profitMargin;
-  /*
-	for(int i = 0, i < 3, i++) {
-		product newProd = new product()
-		products.emplace();
+
+	for (int f = 0; f < 3; f++) {
+
+		//product newProd = makeProduct(randField);
+		//products.emplace();
 	}
-  */
+  
 	cout << "==========\nWelcome to Supply Chain. You are playing version: " + version + "\n\nPlease enter your name: \n> ";
 	cin >> name;
 	cout << "Thank you. Please enter your company name: \n> ";
 	cin >> companyName;
   cout << "Please wait, loading...\n";
 
-  //sleep(3);
+  sleep(3);
   cout << "Have you played before?(y or n)\n";
   cin >> command;
   if (command == "y") {
@@ -108,14 +125,18 @@ int main() {
 			else if (command == "wage") {
 				cout << "Change the wage of your workers(current wage is " << wage << "):\n> ";
 				cin >> potentialWage;
-				potentialWage2 = (float)potentialWage;
-				if (potentialWage2 < 0) {
-					cout << "Invalid wage.\n";
-				}
-				else {
+        try {
+			  	potentialWage2 = (float)potentialWage;
+		  		if (potentialWage2 < 0) {
+	  				cout << "Invalid wage.\n";
+  				} else {
 					wage = potentialWage2;
 					cout << "Changed the wage to " << wage << ".\n";
 				}
+        } catch (exception e) {
+          cout << "Wrong. " << endl;
+        }
+				
 			}
 			else if (command == "outsrc") {
 				cout << "Outsourcing options:\ntoggle <product index> - toggle if a product is outsourced\nexit - leave the outsourcing menu\n";
