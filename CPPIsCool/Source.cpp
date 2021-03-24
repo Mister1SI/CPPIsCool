@@ -10,6 +10,10 @@
 #include <fstream>
 //#include <windows.h>
 using namespace std;
+string version = "prod0.1.3";
+
+
+
 typedef int __Ifd, *_IN_, (*lmt)(void);
   string fields[4] = { "agriculture", "fuel", "electronics", "roadVehicles" };
 	string fieldProdNames[4][5] = {{"Cereal", "Flour", "Sugar", "Eggs", "Meat"}, {"Refined gasoline", "Raw diesel", "Refined diesel", "Crude oil", "Kerosene"}, {"Smartphone", "Tablet", "Laptop", "Desktop", "Motherboard"}, {"SUV", "Car", "Truck", "Van", "Sports Car"}};
@@ -18,10 +22,15 @@ typedef int __Ifd, *_IN_, (*lmt)(void);
 	string terciarySectors[4][2] = { {"USA", "India"}, {"USA", "China"}, {"USA", "China"}, {"USA", "China"} };
   int randField = (rand() % 3) + 1;
   
+
+
 int randNum(int max) {
 	int returnValue = (rand() % max) + 1;
 	return returnValue;
 }
+
+
+
 class product {
 	public:
 		string products[4] = {"agriculture", "fuel", "electronics", "roadVehicles"};
@@ -39,6 +48,12 @@ class product {
       outsourced = false;
 		}
 };
+
+
+
+
+
+
 product makeProduct(int fieldNew) {
   int rand5 = randNum(4);
   int rand3 = randNum(2);
@@ -51,15 +66,20 @@ product makeProduct(int fieldNew) {
   product returnObject(prodNameNew, supplyChainNew, fieldNew);
   return returnObject;
 }
+
+
+
+
+
 int main() {
   ofstream outStream("records.txt");
   time_t now = time(0);
   char* dt = ctime(&now);
   //cout << "DEBUG: " << dt << endl << &fields[2] << endl << "Possible 0x8007002\n";
   srand((unsigned) time(0));
-	int workers = 100, month = 1, hoursPerMonth = 150, randWork;
+	int workers = 100, month = 1, hoursPerMonth = 150, randWork, marginChange, randTrue;
 	float totalCompanyValue = 101872.62, revenue = 6724.11, profitMargin = 0.34, wage = 9, percentOutsourced = 0, potentialWage, potentialWage2, profit, workerCost, monthlyExpenses = 0, newWorkCost;
-	string version = "prod0.1.1", name, companyName, command = "";
+	string name, companyName, command = "";
 	string randomEvents[] = { "deathAssassinated", "deathCancer", "deathCarCrash", "governmentGrant", "childLaborExposed"};
 	
   string mainField = fields[randField];
@@ -72,13 +92,19 @@ int main() {
 		products.emplace_back(newProd);
 	}
   
+
+
+
+
+
+
 	cout << "==========\nWelcome to Supply Chain. You are playing version: " + version + "\n\nPlease enter your name: \n> ";
 	cin >> name;
 	cout << "Thank you. Please enter your company name: \n> ";
 	cin >> companyName;
   cout << "Please wait, loading...\n";
 
-  //sleep(3);
+  sleep(3);
   cout << "Have you played before?(y or n)\n";
   cin >> command;
   if (command == "y") {
@@ -86,8 +112,22 @@ int main() {
   } else {
     playedBefore = false;
   }
+  cout << "Loading...";
+
+
+  sleep(1);
+
+
+
   outStream << name << endl << companyName << endl << playedBefore << endl << dt << endl << "==========\n";
   outStream.close();
+
+
+
+
+
+
+
   if (!playedBefore) {
   	cout << "Welcome, " << name << ", owner of " << companyName << ", to Supply chain. You are a new US business owner toying with the idea of outsourcing, which is getting the materials for and creating your products in a different country. This can lower costs, but it has some effects.(Press Enter)\n";
 	  cin.ignore();
@@ -105,6 +145,14 @@ int main() {
 	  cout << "With these things in mind, you decide to outsource your products.  Go ahead  and complete month 1.";
   	cin.ignore();
   }
+
+
+
+
+
+
+
+
 	while (true) {
 		cout << "\n==========\nStart of month " << month << "\nTotal workers: " << workers << "\n\nTotal company value: $" << totalCompanyValue << "\nTotal revenue per month: $" << revenue << "\nCost of workers: $" << workerCost;
 		cout << "\nProfit per month: $" << profit << "\nProfit margin: " << profitMargin * 100 << "%\nPercent of products outsourced: " << percentOutsourced << "%\nMain product type: " << mainField << endl;
@@ -119,7 +167,10 @@ int main() {
 				break;
 			}
 			else if (command == "sc") {
-				cout << "Yes\n";
+        cout << "Note that the supply chain is irrelivant if the product is not outsourced.\n";
+				for (int i = 0; i < products.size(); i++) {
+          cout << "Name: " << products[i].productName << "  Primary Sector: " << products[i].supplyChain[0] << "  Secondary Sector: " << products[i].supplyChain[1] << "  Terciary Sector: " << products[i].supplyChain[2] << "  Is outsourced: " << products[i].outsourced << endl;
+        }
 			}
 			else if (command == "wage") {
         try {
@@ -145,7 +196,13 @@ int main() {
           if (command == "exit") {
             break;
           } else if (command == "toggle") {
-            cout << "Oof.\n";
+            cout << "Which product(As a number): ";
+            cin >> command;
+            if (products[stoi(command)].outsourced == false) {
+              products[stoi(command)].outsourced = true;
+            } else {
+              products[stoi(command)].outsourced = false;
+            }
           }
         }
 			}
@@ -186,12 +243,20 @@ int main() {
 		month++;
     randWork = randNum((int)workers / 5);
     newWorkCost = randWork * (rand() % 3000);
-;		workers = workers + randWork;
+  	workers = workers + randWork;
     totalCompanyValue -= newWorkCost;
     monthlyExpenses += newWorkCost;
 		totalCompanyValue = totalCompanyValue + randNum((int)totalCompanyValue / 3);
-		revenue = revenue + randNum((int)revenue / 3);
-		profit = revenue * profitMargin;
+		revenue += (workers * 400 * (products.size() * 0.2)) * 0.05;
+		
+    marginChange = rand() % 5;
+    randTrue = rand() % 1;
+    if (randTrue == 0) {
+      profitMargin -= marginChange / 100;
+    } else {
+      profitMargin += marginChange / 100;
+    }
+    profit = revenue * profitMargin;
 	}
 	return 0;
 };
