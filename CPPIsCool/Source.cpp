@@ -39,7 +39,7 @@ class product {
       outsourced = false;
 		}
 };
-void makeProduct(int fieldNew) {
+product makeProduct(int fieldNew) {
   int rand5 = randNum(4);
   int rand3 = randNum(2);
   __Ifd rand2 = randNum(1);
@@ -48,8 +48,8 @@ void makeProduct(int fieldNew) {
   supplyChainNew[1] = secondarySectors[fieldNew][rand3];
   supplyChainNew[2] = terciarySectors[fieldNew][rand2];
   string prodNameNew = fieldProdNames[fieldNew][rand5];
-  //product returnObject = new product(prodNameNew, supplyChainNew, fieldNew);
-  //return returnObject;
+  product returnObject(prodNameNew, supplyChainNew, fieldNew);
+  return returnObject;
 }
 int main() {
   ofstream outStream("records.txt");
@@ -57,8 +57,8 @@ int main() {
   char* dt = ctime(&now);
   //cout << "DEBUG: " << dt << endl << &fields[2] << endl << "Possible 0x8007002\n";
   srand((unsigned) time(0));
-	int workers = 100, month = 1;
-	float totalCompanyValue = 101872.62, revenue = 6724.11, profitMargin = 0.34, wage = 9, percentOutsourced = 0, potentialWage, potentialWage2, profit;
+	int workers = 100, month = 1, hoursPerMonth = 150, randWork;
+	float totalCompanyValue = 101872.62, revenue = 6724.11, profitMargin = 0.34, wage = 9, percentOutsourced = 0, potentialWage, potentialWage2, profit, workerCost, monthlyExpenses = 0, newWorkCost;
 	string version = "prod0.1.1", name, companyName, command = "";
 	string randomEvents[] = { "deathAssassinated", "deathCancer", "deathCarCrash", "governmentGrant", "childLaborExposed"};
 	
@@ -66,11 +66,10 @@ int main() {
 	bool nextMonth = false, playedBefore;
 	vector<product> products;
 	profit = revenue * profitMargin;
-
+  workerCost = wage * hoursPerMonth * workers;
 	for (int f = 0; f < 3; f++) {
-
-		//product newProd = makeProduct(randField);
-		//products.emplace();
+		product newProd = makeProduct(randField);
+		products.emplace_back(newProd);
 	}
   
 	cout << "==========\nWelcome to Supply Chain. You are playing version: " + version + "\n\nPlease enter your name: \n> ";
@@ -79,7 +78,7 @@ int main() {
 	cin >> companyName;
   cout << "Please wait, loading...\n";
 
-  sleep(3);
+  //sleep(3);
   cout << "Have you played before?(y or n)\n";
   cin >> command;
   if (command == "y") {
@@ -107,14 +106,14 @@ int main() {
   	cin.ignore();
   }
 	while (true) {
-		cout << "\n==========\nStart of month " << month << "\nTotal workers: " << workers << "\n\nTotal company value: $" << totalCompanyValue << "\nTotal revenue per month: $" << revenue;
+		cout << "\n==========\nStart of month " << month << "\nTotal workers: " << workers << "\n\nTotal company value: $" << totalCompanyValue << "\nTotal revenue per month: $" << revenue << "\nCost of workers: $" << workerCost;
 		cout << "\nProfit per month: $" << profit << "\nProfit margin: " << profitMargin * 100 << "%\nPercent of products outsourced: " << percentOutsourced << "%\nMain product type: " << mainField << endl;
 
 		while (true) {
 			cout << "Enter a command(help for a list): \n> ";
 			cin >> command;
 			if (command == "help") {
-				cout << "next - move to the next month\nhelp - show this list\nsc - show the supply chain\nwage - change the wage of your workers\noutsrc - edit your outsourcing settings\nproduct - create a new product(costs money)\nstop - end the game\n";
+				cout << "next - move to the next month\nhelp - show this list\nsc - show the supply chain\nwage - change the wage of your workers\noutsrc - edit your outsourcing settings\nproduct - show the product menu\nstop - end the game\n";
 			}
 			else if (command == "next") {
 				break;
@@ -123,20 +122,20 @@ int main() {
 				cout << "Yes\n";
 			}
 			else if (command == "wage") {
-				cout << "Change the wage of your workers(current wage is " << wage << "):\n> ";
-				cin >> potentialWage;
         try {
+          cout << "Change the wage of your workers(current wage is " << wage << "):\n> ";
+          cin >> potentialWage;
 			  	potentialWage2 = (float)potentialWage;
 		  		if (potentialWage2 < 0) {
 	  				cout << "Invalid wage.\n";
   				} else {
 					wage = potentialWage2;
 					cout << "Changed the wage to " << wage << ".\n";
-				}
+			  	}
         } catch (exception e) {
           cout << "Wrong. " << endl;
+          break;
         }
-				
 			}
 			else if (command == "outsrc") {
 				cout << "Outsourcing options:\ntoggle <product index> - toggle if a product is outsourced\nexit - leave the outsourcing menu\n";
@@ -151,7 +150,27 @@ int main() {
         }
 			}
 			else if (command == "product") {
-				
+        cout << "PRODUCT MENU\nFields:\n1 - Agriculture\n2 - Fuel\n3 - Electronics\n4 - Road Vehicles\nnew - make a new product\nlist - show all your products\nexit - leave the product menu\n";
+				while (true) {
+          cout << "product> ";
+          cin >> command;
+          if (command == "new") {
+            cout << "Enter a product field as a number:\nproduct> ";
+            cin >> command;
+            products.emplace_back(makeProduct(stoi(command)));
+            int newThang = (rand() % 3500);
+            totalCompanyValue -= newThang;
+            monthlyExpenses += newThang;
+          } else if (command == "list")  {
+            for (int i = 0; i < products.size(); i++) {
+              cout << "Name: " << products[i].productName << "  Outsourced: " << products[i].outsourced << "  Field: " << products[i].field << endl; 
+            }
+          } else if (command == "exit") {
+            break;
+          } else {
+            cout << "Wrong. Try again: \n";
+          }
+        }
 			}
 			else if (command == "stop") {
         cout << "END STATISTICS:\n==========\nTotal workers: " << workers << "\n\nTotal company value: $" << totalCompanyValue << "\nTotal revenue per month: $" << revenue;
@@ -161,9 +180,15 @@ int main() {
 		}
 		if (month == 1 && playedBefore == false) {
 			cout << "Congratulations on completing month 1. ";
-		}
+		} else if (month == 3 && playedBefore == false) {
+      cout << "Hopefully, you've outsourced some of your products and seen how ";
+    }
 		month++;
-		workers = workers + randNum((int)workers / 5);
+    randWork = randNum((int)workers / 5);
+    newWorkCost = randWork * (rand() % 3000);
+;		workers = workers + randWork;
+    totalCompanyValue -= newWorkCost;
+    monthlyExpenses += newWorkCost;
 		totalCompanyValue = totalCompanyValue + randNum((int)totalCompanyValue / 3);
 		revenue = revenue + randNum((int)revenue / 3);
 		profit = revenue * profitMargin;

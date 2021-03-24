@@ -1,2 +1,9 @@
 language = "cpp"
 run = "clang++-7 -pthread -std=c++17 -o main CPPIsCool/Source.cpp"
+
+
+#Compiler command:
+#clang++-7 -pthread -std=c++17 -o main CPPIsCool/Source.cpp
+#
+#Run command:
+#./main
