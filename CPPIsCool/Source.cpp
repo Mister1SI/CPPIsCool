@@ -6,11 +6,10 @@
 #include <stdlib.h>
 #include <vector>
 #include <ctime>
-#include <unistd.h>
-#include <fstream>
-//#include <windows.h>
+//#include <unistd.h>
+#include <windows.h>
 using namespace std;
-string version = "prod0.1.3";
+string version = "prod0.1.4";
 
 
 
@@ -37,15 +36,32 @@ class product {
 		string services[3] = { "shipping", "hospitality", "garbage" };
 		string supplyChain[3];
 		string productName;
-    int field;
-    bool outsourced;
+		double productCost;
+		int field, soldPerMonth;
+		bool outsourced;
 		product(string prodName, string slupChain[3], int feld) {
 			productName = prodName;
 			supplyChain[0] = slupChain[0];
 			supplyChain[1] = slupChain[1];
 			supplyChain[2] = slupChain[2];
 			field = feld;
-      outsourced = false;
+			if (feld == 4) {
+				productCost = 50000;
+				soldPerMonth = 2;
+			}
+			else if (feld == 3) {
+				productCost = 2000;
+				soldPerMonth = 200;
+			}
+			else if (feld == 2) {
+				productCost = 30;
+				soldPerMonth = 1000;
+			}
+			else {
+				productCost = 6;
+				soldPerMonth = 10000;
+			}
+		outsourced = false;
 		}
 };
 
@@ -72,26 +88,25 @@ product makeProduct(int fieldNew) {
 
 
 int main() {
-  ofstream outStream("records.txt");
-  time_t now = time(0);
-  char* dt = ctime(&now);
   //cout << "DEBUG: " << dt << endl << &fields[2] << endl << "Possible 0x8007002\n";
   srand((unsigned) time(0));
 	int workers = 100, month = 1, hoursPerMonth = 150, randWork, marginChange, randTrue;
-	float totalCompanyValue = 101872.62, revenue = 6724.11, profitMargin = 0.34, wage = 9, percentOutsourced = 0, potentialWage, potentialWage2, profit, workerCost, monthlyExpenses = 0, newWorkCost;
+	float totalCompanyValue = 101872.62, profitMargin = 0.34, wage = 9, percentOutsourced = 0, potentialWage, potentialWage2, profit, workerCost, monthlyExpenses = 0, newWorkCost;
 	string name, companyName, command = "";
 	string randomEvents[] = { "deathAssassinated", "deathCancer", "deathCarCrash", "governmentGrant", "childLaborExposed"};
-	
-  string mainField = fields[randField];
+	string mainField = fields[randField];
 	bool nextMonth = false, playedBefore;
+	double revenue = 0;
 	vector<product> products;
-	profit = revenue * profitMargin;
-  workerCost = wage * hoursPerMonth * workers;
+    workerCost = wage * hoursPerMonth * workers;
 	for (int f = 0; f < 3; f++) {
 		product newProd = makeProduct(randField);
 		products.emplace_back(newProd);
 	}
-  
+	for (int i = 0; i < products.size(); i++) {
+		revenue += products[i].productCost * products[i].soldPerMonth;
+	}
+	profit = revenue * profitMargin;
 
 
 
@@ -100,27 +115,23 @@ int main() {
 
 	cout << "==========\nWelcome to Supply Chain. You are playing version: " + version + "\n\nPlease enter your name: \n> ";
 	cin >> name;
+	//Sleep(1000);
 	cout << "Thank you. Please enter your company name: \n> ";
 	cin >> companyName;
-  cout << "Please wait, loading...\n";
+    cout << "Please wait, loading...\n";
 
-  sleep(3);
-  cout << "Have you played before?(y or n)\n";
-  cin >> command;
-  if (command == "y") {
-    playedBefore = true;
-  } else {
-    playedBefore = false;
-  }
-  cout << "Loading...";
-
-
-  sleep(1);
+    //Sleep(3000);
+    cout << "Have you played before?(y or n)\n";
+    cin >> command;
+    if (command == "y") {
+        playedBefore = true;
+    } else {
+		playedBefore = false;
+    }
+  cout << "Loading...\n";
 
 
-
-  outStream << name << endl << companyName << endl << playedBefore << endl << dt << endl << "==========\n";
-  outStream.close();
+  //Sleep(1000);
 
 
 
@@ -129,19 +140,21 @@ int main() {
 
 
   if (!playedBefore) {
-  	cout << "Welcome, " << name << ", owner of " << companyName << ", to Supply chain. You are a new US business owner toying with the idea of outsourcing, which is getting the materials for and creating your products in a different country. This can lower costs, but it has some effects.(Press Enter)\n";
+  	  cout << "Welcome, " << name << ", owner of " << companyName << ", to Supply chain. You are a new US business owner toying with the idea of outsourcing, which is getting the materials for and creating your products in a different country. This can lower costs, but it has some effects.(Press Enter)\n";
 	  cin.ignore();
-    cin.ignore();
+	  cin.ignore();
 	  cout << "The United States outsources a ton of stuff - in 2017, 84.2% of outsourcing deals came from the US!\nYou are new to the concepts of globalization, which is the interdependence of countries on each other. While researching, you find that there are pros and cons to globalization.(Press Enter)\n";
-  	cin.ignore();
-	  cout << "Pros:\n-Lowers costs";
-	  cin.ignore();
+     cin.ignore();
+	cout << "Pros:\n-Lowers costs";
+	cin.ignore();
     cout << "-Provides jobs for third-world citizens\n";
     cin.ignore();
-	  cout << "Cons:\n-Takes advantage of third-world countries, where children may be doing the labor";
-	  cin.ignore();
+	cout << "Cons:\n-Takes advantage of third-world countries, where children may be doing the labor";
+	cin.ignore();
     cout << "-Connor is weird\n";
     cin.ignore();
+	cout << "Your company has started off specialized, which is where you focus on only one type of product.  Sometimes companies and even countries specialize because that is the only thing that they can do.(Press enter)\n";
+	cin.ignore();
 	  cout << "With these things in mind, you decide to outsource your products.  Go ahead  and complete month 1.";
   	cin.ignore();
   }
@@ -155,7 +168,7 @@ int main() {
 
 	while (true) {
 		cout << "\n==========\nStart of month " << month << "\nTotal workers: " << workers << "\n\nTotal company value: $" << totalCompanyValue << "\nTotal revenue per month: $" << revenue << "\nCost of workers: $" << workerCost;
-		cout << "\nProfit per month: $" << profit << "\nProfit margin: " << profitMargin * 100 << "%\nPercent of products outsourced: " << percentOutsourced << "%\nMain product type: " << mainField << endl;
+		cout << "\nProfit per month: $" << profit << "\nProfit margin: " << profitMargin * 100 << "%\nLast month's expenses: " << monthlyExpenses << "\nPercent of products outsourced: " << percentOutsourced << "%\nMain product type: " << mainField << endl;
 
 		while (true) {
 			cout << "Enter a command(help for a list): \n> ";
@@ -237,8 +250,18 @@ int main() {
 		}
 		if (month == 1 && playedBefore == false) {
 			cout << "Congratulations on completing month 1. ";
-		} else if (month == 3 && playedBefore == false) {
-      cout << "Hopefully, you've outsourced some of your products and seen how ";
+		}
+		else if (month == 2 && playedBefore == false) {
+			cout << "RHETORICAL QUESTION: Would stricter business laws and higher enforcment of those laws reduce child labor in third-world countries?\n";
+		}
+		else if (month == 3 && playedBefore == false) {
+			Sleep(500);
+      cout << "Hopefully, you've outsourced some of your products and seen how it can lower costs.  In the US, more than 2/3 of products are outsourced, which has lowered costs and helped some businesses, but also created another problem: child labor.";
+	  cin.ignore();
+	  cin.ignore();
+	  cout << "Many outsourced products are made in third-world countires.  These countries usually have a higher level of desperation, and also less regulations on businesses.  These can cause additional problems like seriously damaging the environment.  But the desperation is often exploited by some people who promise a better life, but in reality make people slaves.";
+	  cin.ignore();
+	  cout << "RHETORICAL QUESTION: What is the source of child labor? \n";
     }
 		month++;
     randWork = randNum((int)workers / 5);
@@ -246,8 +269,6 @@ int main() {
   	workers = workers + randWork;
     totalCompanyValue -= newWorkCost;
     monthlyExpenses += newWorkCost;
-		totalCompanyValue = totalCompanyValue + randNum((int)totalCompanyValue / 3);
-		revenue += (workers * 400 * (products.size() * 0.2)) * 0.05;
 		
     marginChange = rand() % 5;
     randTrue = rand() % 1;
@@ -257,6 +278,12 @@ int main() {
       profitMargin += marginChange / 100;
     }
     profit = revenue * profitMargin;
+	totalCompanyValue += profit;
+	for (int i = 0; i < products.size(); i++) {
+		if (products[i].outsourced == 1) {
+			products[i].soldPerMonth *= 2;
+		}
+	}
 	}
 	return 0;
 };
