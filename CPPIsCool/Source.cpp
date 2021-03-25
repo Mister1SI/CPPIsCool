@@ -9,7 +9,7 @@
 //#include <unistd.h>
 #include <windows.h>
 using namespace std;
-string version = "prod0.1.4";
+string version = "prod0.1.5";
 
 
 
@@ -262,7 +262,16 @@ int main() {
 	  cout << "Many outsourced products are made in third-world countires.  These countries usually have a higher level of desperation, and also less regulations on businesses.  These can cause additional problems like seriously damaging the environment.  But the desperation is often exploited by some people who promise a better life, but in reality make people slaves.";
 	  cin.ignore();
 	  cout << "RHETORICAL QUESTION: What is the source of child labor? \n";
-    }
+		}
+		else if (month == 4 && playedBefore == false) {
+			cout << "Today, making any product is a global effort.  The raw materials need to be harvested, they need to be refined in factories, and then turned into products.  Finally, they are sold.  Products may travel tens of thousands of miles before they are sold.  But this traveling reduces the cost of products.\n";
+		}
+		else if (month == 5 && playedBefore == false) {
+			cout << "Sometimes, a country is simply better suited to make something than another country.  This is called a \"Comparatice Advantage\".  A country may have a comparative advantage because of higher level technology, more access to raw materials, or simply more industrial capacity.\n";
+		}
+		else if (month == 6) {
+			cout << "You have completed the main part of the game.  Thank you for playing.\n";
+		}
 		month++;
     randWork = randNum((int)workers / 5);
     newWorkCost = randWork * (rand() % 3000);
