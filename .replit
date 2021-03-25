@@ -6,4 +6,4 @@ run = "clang++-7 -pthread -std=c++17 -o main.exe CPPIsCool/Source.cpp"
 #clang++-7 -pthread -std=c++17 -o main CPPIsCool/Source.cpp
 #
 #Run command:
-#./main
+#./main.exe

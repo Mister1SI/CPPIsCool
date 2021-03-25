@@ -6,10 +6,10 @@
 #include <stdlib.h>
 #include <vector>
 #include <ctime>
-//#include <unistd.h>
-#include <windows.h>
+#include <unistd.h>
+//#include <windows.h>
 using namespace std;
-string version = "prod0.1.5";
+string version = "rel_1.0.0";
 
 
 
@@ -115,12 +115,12 @@ int main() {
 
 	cout << "==========\nWelcome to Supply Chain. You are playing version: " + version + "\n\nPlease enter your name: \n> ";
 	cin >> name;
-	//Sleep(1000);
+	sleep(1);
 	cout << "Thank you. Please enter your company name: \n> ";
 	cin >> companyName;
     cout << "Please wait, loading...\n";
 
-    //Sleep(3000);
+    sleep(3);
     cout << "Have you played before?(y or n)\n";
     cin >> command;
     if (command == "y") {
@@ -131,7 +131,7 @@ int main() {
   cout << "Loading...\n";
 
 
-  //Sleep(1000);
+  sleep(1);
 
 
 
@@ -255,7 +255,7 @@ int main() {
 			cout << "RHETORICAL QUESTION: Would stricter business laws and higher enforcment of those laws reduce child labor in third-world countries?\n";
 		}
 		else if (month == 3 && playedBefore == false) {
-			Sleep(500);
+			sleep(1);
       cout << "Hopefully, you've outsourced some of your products and seen how it can lower costs.  In the US, more than 2/3 of products are outsourced, which has lowered costs and helped some businesses, but also created another problem: child labor.";
 	  cin.ignore();
 	  cin.ignore();
